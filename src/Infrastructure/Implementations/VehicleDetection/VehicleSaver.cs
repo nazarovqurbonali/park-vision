@@ -1,18 +1,17 @@
-namespace Infrastructure.Implementation.VehicleDetection;
+namespace Infrastructure.Implementations.VehicleDetection;
 
-public sealed class VehicleSaver:ISaver
+public sealed class VehicleSaver : ISaver
 {
     private readonly string _outputDir;
 
     public VehicleSaver(string outputDir)
     {
-        _outputDir = outputDir;
-
+        _outputDir = outputDir ?? throw new ArgumentNullException(nameof(outputDir));
         if (!Directory.Exists(_outputDir))
             Directory.CreateDirectory(_outputDir);
     }
 
-    public void Save(int id, Rect bBox, Mat frame, int frameCount)
+    public BaseResult Save(int id, Rect bBox, Mat frame, int frameCount)
     {
         try
         {
@@ -20,17 +19,14 @@ public sealed class VehicleSaver:ISaver
             if (!Directory.Exists(vehicleDir))
                 Directory.CreateDirectory(vehicleDir);
 
-            Mat cropped = new Mat(frame, bBox);
-
+            using var cropped = new Mat(frame, bBox);
             string filename = Path.Combine(vehicleDir, $"frame_{frameCount}.jpg");
-
             Cv2.ImWrite(filename, cropped);
-
-            Console.WriteLine($"[Saver] Vehicle {id}, frame {frameCount} saved to: {filename}");
+            return BaseResult.Success($"Saved: {filename}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Saver] Ошибка при сохранении: {ex.Message}");
+            return BaseResult.Failure(ResultPatternError.InternalServerError($"Save error: {ex.Message}"));
         }
     }
 }

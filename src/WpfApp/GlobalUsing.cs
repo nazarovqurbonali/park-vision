@@ -5,4 +5,4 @@ global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Configuration;
 global using Application.Contracts.VehicleDetection;
 global using Microsoft.Extensions.DependencyInjection;
-global using Infrastructure.Implementation.VehicleDetection;
+global using Infrastructure.Implementations.VehicleDetection;

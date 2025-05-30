@@ -7,7 +7,10 @@ public static class Program
     {
         IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile(ConfigNames.AppSettingJson, optional: false, reloadOnChange: true)
+            .AddJsonFile(
+                ConfigNames.AppSettingJson,
+                optional: false,
+                reloadOnChange: true)
             .Build();
 
         IHost host = Host.CreateDefaultBuilder()
@@ -30,6 +33,8 @@ public static class Program
 
                 services.AddSingleton<ISaver, VehicleSaver>(
                     _ => new(configuration.GetRequiredString(ConfigNames.OutputFolder)));
+
+                services.AddSingleton<VideoProcessor>();
             }).Build();
 
 
