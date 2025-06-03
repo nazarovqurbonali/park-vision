@@ -3,3 +3,7 @@ ConfigurationValueMustBeInteger=Configuration value for '{0}' must be a valid in
 ConfigurationValueMustBeBoolean=Configuration value for '{0}' must be a valid boolean. Found: '{1}'.
 ConnectionStringNotFound=Connection string '{0}' was not found in the configuration.
 
+ModelLoaderLoadModelNotFound=Not found model for loading.
+ModelLoaderLoadClassNamesNotFound=Not found class-names for loading.
+ModelLoaderLoadModelNotLoaded=Model not loaded.
+ModelLoaderLoadClassNamesNotLoaded=ClassNames not loaded.
