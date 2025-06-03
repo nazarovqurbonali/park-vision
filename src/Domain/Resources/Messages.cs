@@ -32,4 +32,5 @@ public static class Messages
     public static string VideoProcessorNotFoundVideo => Resources.Get().AsString();
     public static string ModelLoaderLoadModelNotLoaded => Resources.Get().AsString();
     public static string ModelLoaderLoadClassNamesNotLoaded => Resources.Get().AsString();
+    public static string GetUnconnectedOutLayersNamesFailed => Resources.Get().AsString();
 }

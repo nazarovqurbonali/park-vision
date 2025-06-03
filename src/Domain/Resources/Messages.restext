@@ -8,3 +8,6 @@ VideoProcessorNotFoundVideo=Not found video for processing.
 ModelLoaderLoadClassNamesNotFound=Not found class-names for loading.
 ModelLoaderLoadModelNotLoaded=Model not loaded.
 ModelLoaderLoadClassNamesNotLoaded=ClassNames not loaded.
+
+
+GetUnconnectedOutLayersNamesFailed=Failed to get output layer names.
