@@ -29,6 +29,7 @@ public static class Messages
     public static string ConnectionStringNotFound(string name) => Resources.Get().Format(name);
     public static string ModelLoaderLoadModelNotFound => Resources.Get().AsString();
     public static string ModelLoaderLoadClassNamesNotFound => Resources.Get().AsString();
+    public static string VideoProcessorNotFoundVideo => Resources.Get().AsString();
     public static string ModelLoaderLoadModelNotLoaded => Resources.Get().AsString();
     public static string ModelLoaderLoadClassNamesNotLoaded => Resources.Get().AsString();
 }

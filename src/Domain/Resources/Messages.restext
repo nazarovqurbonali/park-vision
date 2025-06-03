@@ -4,6 +4,7 @@ ConfigurationValueMustBeBoolean=Configuration value for '{0}' must be a valid bo
 ConnectionStringNotFound=Connection string '{0}' was not found in the configuration.
 
 ModelLoaderLoadModelNotFound=Not found model for loading.
+VideoProcessorNotFoundVideo=Not found video for processing.
 ModelLoaderLoadClassNamesNotFound=Not found class-names for loading.
 ModelLoaderLoadModelNotLoaded=Model not loaded.
 ModelLoaderLoadClassNamesNotLoaded=ClassNames not loaded.
