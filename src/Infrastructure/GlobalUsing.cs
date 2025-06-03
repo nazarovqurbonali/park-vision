@@ -1,4 +1,5 @@
 global using OpenCvSharp;
+global using Domain.Models;
 global using OpenCvSharp.Dnn;
 global using Domain.Resources;
 global using Microsoft.Extensions.Logging;
