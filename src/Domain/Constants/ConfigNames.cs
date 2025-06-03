@@ -8,4 +8,5 @@ public static class ConfigNames
     public const string WeightsPath = "Paths:WeightsPath";
     public const string NamesPath = "Paths:NamesPath";
     public const string OutputFolder = "Paths:OutputFolder";
+    public const string MaxSavesPerVehicle = "Paths:MaxSavesPerVehicle";
 }

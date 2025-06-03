@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace WpfApp;
 
 public static class Program
@@ -20,21 +22,19 @@ public static class Program
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<IConfiguration>(configuration);
 
-                services.AddSingleton<IVideoSource, VideoSource>(
-                    _ => new(configuration.GetRequiredString(ConfigNames.VideoPath)));
+                services.AddSingleton<IModelLoader, ModelLoader>();
 
-                services.AddSingleton<IDetector, YoloDetector>(_ =>
+                services.AddSingleton<IImageSaver, ImageSaver>();
+                services.AddSingleton<IVehicleTracker, VehicleTracker>(x =>
                     new(
-                        configuration.GetRequiredString(ConfigNames.ConfigPath),
-                        configuration.GetRequiredString(ConfigNames.WeightsPath),
-                        configuration.GetRequiredString(ConfigNames.NamesPath)));
+                        x.GetRequiredService<IImageSaver>(),
+                        configuration.GetRequiredString(ConfigNames.OutputFolder),
+                        configuration.GetRequiredInt(ConfigNames.MaxSavesPerVehicle),
+                        x.GetRequiredService<ILogger<VehicleTracker>>())
+                );
 
-                services.AddSingleton<ITracker, VehicleTracker>();
 
-                services.AddSingleton<ISaver, VehicleSaver>(
-                    _ => new(configuration.GetRequiredString(ConfigNames.OutputFolder)));
-
-                services.AddSingleton<VideoProcessor>();
+                services.AddSingleton<IVideoProcessor, VideoProcessor>();
             }).Build();
 
 

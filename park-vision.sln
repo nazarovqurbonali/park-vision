@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -98,13 +97,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3C8F5BA7-9A3A-4392-B90D-FD29CC64EA82} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
-		{2BB2C849-F88D-40E8-8AB9-63893FB5E2D1} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
-		{DA0CF1E6-1388-4C8D-A7C3-8E6F0D5747AC} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
-		{573435C0-FBE6-4E5A-823F-0ABB291B6A49} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
-		{C08C6A50-BE49-4333-A596-FB94394A3156} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
-		{EB1A13DB-9739-4684-A241-A882B8990CA2} = {0FE600EC-F3B1-4F93-8289-C62BED6E9C82}
 	EndGlobalSection
 EndGlobal
