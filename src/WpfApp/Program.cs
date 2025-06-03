@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace WpfApp;
 
 public static class Program
@@ -25,9 +23,9 @@ public static class Program
                 services.AddSingleton<IModelLoader, ModelLoader>();
 
                 services.AddSingleton<IImageSaver, ImageSaver>();
-                
+
                 services.AddSingleton<IVehicleDetectionService, VehicleDetectionService>();
-                
+
                 services.AddSingleton<IVehicleTracker, VehicleTracker>(x =>
                     new(
                         x.GetRequiredService<IImageSaver>(),
