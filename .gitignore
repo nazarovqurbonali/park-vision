@@ -486,5 +486,5 @@ $RECYCLE.BIN/
 # Ref files
 ref/
 
-# Config App
+# Config App 
 src/WpfApp/appsettings.json
