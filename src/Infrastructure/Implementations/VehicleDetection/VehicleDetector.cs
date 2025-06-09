@@ -40,7 +40,7 @@ public sealed class VehicleDetector(
                 List<Rect> rects = [];
                 List<float> confidences = [];
 
-                foreach (var output in outputs)
+                foreach (Mat output in outputs)
                 {
                     for (int i = 0; i < output.Rows; i++)
                     {

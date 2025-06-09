@@ -11,66 +11,70 @@ public sealed class VehicleTracker(
     private const double IoUThreshold = 0.6;
     private const int MaxFramesToKeepVehicle = 5;
 
-    public void UpdateTrackedVehicles(List<Rect> newRects, Mat frame, int frameCount)
+   public void UpdateTrackedVehicles(List<Rect> newRects, Mat frame, int frameCount)
+{
+    DateTimeOffset date = DateTimeOffset.UtcNow;
+    logger.OperationStarted(nameof(UpdateTrackedVehicles), date);
+
+    // Создаем копию newRects для перечисления
+    List<Rect> rectsToProcess = [..newRects];
+    List<Rect> unmatchedRects = [..newRects]; 
+
+    List<Vehicle> newTrackedVehicles = [];
+    int vehicleId = _nextVehicleId;
+
+    foreach (Rect newRect in rectsToProcess)
     {
-        DateTimeOffset date = DateTimeOffset.UtcNow;
-        logger.OperationStarted(nameof(UpdateTrackedVehicles), date);
-
-        List<Rect> unmatchedRects = newRects;
-
-        List<Vehicle> newTrackedVehicles = [];
-        int vehicleId = _nextVehicleId;
-
-        foreach (Rect newRect in newRects)
+        bool matched = false;
+        foreach (Vehicle tracked in _trackedVehicles.ToList()) 
         {
-            bool matched = false;
-            foreach (Vehicle tracked in _trackedVehicles)
+            double iou = CalculateIoU(newRect, tracked.BoundingBox);
+            if (iou > IoUThreshold)
             {
-                double iou = CalculateIoU(newRect, tracked.BoundingBox);
-                if (iou > IoUThreshold)
+                tracked.BoundingBox = newRect;
+                tracked.FrameCount = frameCount;
+                if (tracked.SaveCount < maxSavesPerVehicle)
                 {
-                    tracked.BoundingBox = newRect;
-                    tracked.FrameCount = frameCount;
-                    if (tracked.SaveCount < maxSavesPerVehicle)
-                    {
-                        BaseResult result = SaveVehicleImage(frame, newRect, frameCount, tracked.Id);
-                        if (result.IsSuccess)
-                            tracked.SaveCount++;
-                        else
-                            logger.LogError(result.Error.Message);
-                    }
-
-                    newTrackedVehicles.Add(tracked);
-                    unmatchedRects.Remove(newRect);
-                    matched = true;
-                    break;
+                    BaseResult result = SaveVehicleImage(frame, newRect, frameCount, tracked.Id);
+                    if (result.IsSuccess)
+                        tracked.SaveCount++;
+                    else
+                        logger.LogError(result.Error.Message);
                 }
-            }
 
-            if (!matched)
-            {
-                BaseResult result = SaveVehicleImage(frame, newRect, frameCount, vehicleId);
-                if (result.IsSuccess)
-                {
-                    newTrackedVehicles.Add(new()
-                    {
-                        Id = vehicleId++,
-                        BoundingBox = newRect,
-                        FrameCount = frameCount,
-                        SaveCount = 1
-                    });
-                }
-                else
-                    logger.LogError(result.Error.Message);
+                newTrackedVehicles.Add(tracked);
+                unmatchedRects.Remove(newRect);
+                matched = true;
+                break;
             }
         }
 
-        _trackedVehicles.Clear();
-        _trackedVehicles.AddRange(newTrackedVehicles.Where(v => frameCount - v.FrameCount < MaxFramesToKeepVehicle));
-        _nextVehicleId = vehicleId;
-
-        logger.OperationCompleted(nameof(UpdateTrackedVehicles), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow - date);
+        if (!matched)
+        {
+            BaseResult result = SaveVehicleImage(frame, newRect, frameCount, vehicleId);
+            if (result.IsSuccess)
+            {
+                newTrackedVehicles.Add(new()
+                {
+                    Id = vehicleId++,
+                    BoundingBox = newRect,
+                    FrameCount = frameCount,
+                    SaveCount = 1
+                });
+            }
+            else
+            {
+                logger.LogError(result.Error.Message);
+            }
+        }
     }
+
+    _trackedVehicles.Clear();
+    _trackedVehicles.AddRange(newTrackedVehicles.Where(v => frameCount - v.FrameCount < MaxFramesToKeepVehicle));
+    _nextVehicleId = vehicleId;
+
+    logger.OperationCompleted(nameof(UpdateTrackedVehicles), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow - date);
+}
 
     private BaseResult SaveVehicleImage(Mat frame, Rect rect, int frameCount, int vehicleId)
     {
