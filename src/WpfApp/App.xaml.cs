@@ -3,7 +3,7 @@ using Application.Extensions.ResultPattern;
 
 namespace WpfApp;
 
-public class App(
+public sealed partial class App(
     MainWindow mainWindow,
     IVehicleDetectionService vehicleDetectionService,
     IConfiguration configuration)

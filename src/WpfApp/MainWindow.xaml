@@ -1,11 +1,72 @@
 ﻿<Window x:Class="WpfApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        xmlns:vm="clr-namespace:WpfApp"
+        Title="Мониторинг" Height="600" Width="1000"
+        Background="{DynamicResource BackgroundBrush}">
+  
+ 
 
-    </Grid>
+  <Grid>
+    <!-- 1) Определяем ряды: Header (50px), контент (*), Footer (30px) -->
+    <Grid.RowDefinitions>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="30"/>
+    </Grid.RowDefinitions>
+
+    <!-- 2) Определяем колонки: Sidebar (200px), MainBar (*) -->
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="200"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Header: строки 0, колонки 0–1 -->
+    <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Background="{DynamicResource AccentBrush}">
+      <TextBlock Text="Live Monitor"
+                 Foreground="White"
+                 FontSize="18"
+                 VerticalAlignment="Center"
+                 Margin="10,0"/>
+      <Button Content="Тема"
+              Command="{Binding ChangeThemeCommand}"
+              Width="80" Height="30"
+              Margin="0,0,10,0"
+              HorizontalAlignment="Right"/>
+    </DockPanel>
+
+    <!-- Sidebar: строка 1, колонка 0 -->
+    <StackPanel Grid.Row="1" Grid.Column="0"
+                Background="{DynamicResource AccentBrush}">
+      <!-- Подключение камеры -->
+      <Button Content="Подключиться"
+              Command="{Binding ConnectCameraCommand}"
+              Margin="0,0,0,10"/>
+      <!-- «О системе» внизу -->
+      <StackPanel VerticalAlignment="Bottom">
+        <Button Content="О системе"
+                Command="{Binding ShowInfoCommand}"/>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- MainBar: строка 1, колонка 1 -->
+    <Border Grid.Row="1" Grid.Column="1"
+            Background="{DynamicResource BackgroundBrush}"
+            Margin="5">
+      <!-- Здесь позже видеопоток и управление камерой -->
+      <TextBlock Text="Здесь будет видеопоток"
+                 Foreground="{DynamicResource AccentBrush}"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+    </Border>
+
+    <!-- Footer: строка 2, колонки 0–1 -->
+    <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Background="{DynamicResource AccentBrush}">
+      <TextBlock Text="Создатель: MR Qurbonali Nazarov"
+                 Foreground="White"
+                 FontSize="12"
+                 VerticalAlignment="Center"
+                 Margin="10,0"/>
+    </DockPanel>
+  </Grid>
 </Window>
