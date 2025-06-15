@@ -1,54 +1,63 @@
 using System.Windows;
-using Application.Extensions.ResultPattern;
+using WpfApp.Views;
 
 namespace WpfApp;
 
-public sealed partial class App(
-    MainWindow mainWindow,
-    IVehicleDetectionService vehicleDetectionService,
-    IConfiguration configuration)
-    : System.Windows.Application
+public sealed partial class App : System.Windows.Application
 {
-    protected override void OnStartup(StartupEventArgs e)
-    {
+    private readonly IHost _host;
 
+    public App()
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(
+                ConfigNames.AppSettingJson,
+                optional: false,
+                reloadOnChange: true)
+            .Build();
+
+        _host = Host.CreateDefaultBuilder()
+            .ConfigureServices(services =>
+            {
+                services.AddSingleton<App>();
+                services.AddSingleton<MainWindow>();
+                services.AddSingleton<IConfiguration>(configuration);
+
+                services.AddSingleton<IModelLoader, ModelLoader>();
+
+                services.AddSingleton<IImageSaver, ImageSaver>();
+
+                services.AddSingleton<IVehicleDetectionService, VehicleDetectionService>();
+
+                services.AddSingleton<IVehicleTracker, VehicleTracker>(x =>
+                    new(
+                        x.GetRequiredService<IImageSaver>(),
+                        configuration.GetRequiredString(ConfigNames.OutputFolder),
+                        configuration.GetRequiredInt(ConfigNames.MaxSavesPerVehicle),
+                        x.GetRequiredService<ILogger<VehicleTracker>>())
+                );
+
+
+                services.AddSingleton<IVideoProcessor, VideoProcessor>();
+            }).Build();
+    }
+
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        await _host.StartAsync();
+
+        MainWindow mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
+
         base.OnStartup(e);
     }
 
-    //for testing
-    private void TestVehicleDetectionService()
+    protected override async void OnExit(ExitEventArgs e)
     {
-        try
-        {
-            string weightsPath = configuration.GetRequiredString(ConfigNames.WeightsPath);
-            string configPath = configuration.GetRequiredString(ConfigNames.ConfigPath);
-            string namesPath = configuration.GetRequiredString(ConfigNames.NamesPath);
-            string videoPath = configuration.GetRequiredString(ConfigNames.VideoPath);
-            string outputFolder = configuration.GetRequiredString(ConfigNames.OutputFolder);
-            int maxSavesPerVehicle = configuration.GetRequiredInt(ConfigNames.MaxSavesPerVehicle);
+        await _host.StopAsync();
+        _host.Dispose();
 
-            BaseResult result = vehicleDetectionService.Run(
-                configPath,
-                weightsPath,
-                namesPath,
-                videoPath,
-                outputFolder,
-                maxSavesPerVehicle
-            );
-
-            if (result.IsSuccess)
-            {
-                MessageBox.Show("Vehicle detection completed successfully! Check the output folder.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show($"Vehicle detection failed: {result.Error.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        base.OnExit(e);
     }
 }

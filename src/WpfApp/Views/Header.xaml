@@ -1,0 +1,16 @@
+<UserControl x:Class="WpfApp.Views.HeaderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="50" Background="{DynamicResource BackgroundBrush}">
+
+    <Grid>
+        <Button Content="Toggle Theme" 
+                Command="{Binding ToggleThemeCommand}" 
+                HorizontalAlignment="Right" 
+                Margin="10" Width="120" Height="30" />
+        <TextBlock Text="Vehicle Detection System" 
+                   Foreground="{DynamicResource ForegroundBrush}" 
+                   VerticalAlignment="Center" FontSize="18" FontWeight="Bold"
+                   HorizontalAlignment="Left" Margin="10,0,0,0"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,56 @@
+﻿<Window x:Class="WpfApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WpfApp.Views"
+        xmlns:vm="clr-namespace:WpfApp.ViewModels"
+        Title="Vehicle Detection App"
+        Height="600" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BackgroundBrush}">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Header -->
+        <local:HeaderView Grid.Row="0" Grid.ColumnSpan="2" />
+        
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" />
+
+        <!-- SideBar -->
+        <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource BackgroundBrush}" Padding="10" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+            <StackPanel>
+                <TextBlock Text="SideBar" Foreground="{DynamicResource ForegroundBrush}" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <Button Content="Камера" Margin="0,0,0,5"/>
+                <Button Content="Система" />
+            </StackPanel>
+        </Border>
+
+        <!-- Main content -->
+        <Border Grid.Row="1" Grid.Column="1" Background="{DynamicResource BackgroundBrush}" Padding="10">
+            <TextBlock Text="Основное содержимое" Foreground="{DynamicResource ForegroundBrush}" FontSize="14" />
+        </Border>
+
+        <Border Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0" />
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource BackgroundBrush}" Padding="5">
+            <TextBlock Text="© 2025 MR Qurbonali" 
+                       Foreground="{DynamicResource ForegroundBrush}" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+        </Border>
+    </Grid>
+</Window>
