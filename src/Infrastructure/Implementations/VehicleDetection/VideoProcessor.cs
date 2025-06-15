@@ -10,7 +10,7 @@ public sealed class VideoProcessor(
 
         using VideoCapture capture = new(videoPath);
         if (!capture.IsOpened())
-        {
+        {   
             logger.LogCritical(Messages.VideoProcessorNotFoundVideo);
             logger.OperationCompleted(nameof(ProcessVideo), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow - date);
             return BaseResult.Failure(ResultPatternError.NotFound(Messages.VideoProcessorNotFoundVideo));
@@ -28,6 +28,15 @@ public sealed class VideoProcessor(
         }
 
         logger.OperationCompleted(nameof(ProcessVideo), DateTimeOffset.UtcNow, DateTimeOffset.UtcNow - date);
+        return BaseResult.Success();
+    }
+
+    public BaseResult CheckCameraAvailability(string videoPath)
+    {
+        using VideoCapture capture = new(videoPath);
+        if (!capture.IsOpened())
+            return BaseResult.Failure(ResultPatternError.NotFound(Messages.VideoProcessorNotFoundVideo));
+
         return BaseResult.Success();
     }
 }
