@@ -40,6 +40,8 @@ public sealed partial class App : System.Windows.Application
 
 
                 services.AddSingleton<IVideoProcessor, VideoProcessor>();
+                services.AddSingleton<ILiveCameraService, LiveCameraService>();
+
             }).Build();
     }
 
