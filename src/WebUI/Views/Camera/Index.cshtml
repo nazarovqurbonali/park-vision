@@ -1,0 +1,159 @@
+@model WebUI.Models.CameraViewModel
+@{
+    ViewData["Title"] = "Камера";
+}
+
+<div class="container">
+    <h2 class="mb-4"><i class="fas fa-camera me-2"></i>Управление камерой</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.IsCameraConnected ? "alert-success" : "alert-danger")">
+            @Model.Message
+            @if (Model.IsTimeoutError)
+            {
+                <p>Камера не найдена: превышено время ожидания подключения (30 секунд).</p>
+            }
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Подключение камеры</h5>
+            <form asp-action="CheckCamera" method="post">
+                <div class="mb-3">
+                    <label asp-for="RtspUrl" class="form-label">RTSP URL</label>
+                    <input asp-for="RtspUrl" class="form-control" placeholder="rtsp://[ip]:[port]/stream" />
+                    <span asp-validation-for="RtspUrl" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check me-1"></i>OK</button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.IsCameraConnected)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Видеопоток</h5>
+                <img id="videoStream" class="w-100" style="max-height: 400px;" src="/Camera/GetFrame" alt="Видеопоток" />
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Настройка поворота</h5>
+                <form asp-action="AddRotation" method="post">
+                    <input type="hidden" asp-for="RtspUrl" />
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label asp-for="RotationInterval" class="form-label">Интервал (мин)</label>
+                            <input asp-for="RotationInterval" class="form-control" type="number" min="1" max="60" />
+                            <span asp-validation-for="RotationInterval" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label asp-for="RotationAngle" class="form-label">Угол (°)</label>
+                            <input asp-for="RotationAngle" class="form-control" type="number" min="0" max="360" />
+                            <span asp-validation-for="RotationAngle" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label asp-for="RotationDirection" class="form-label">Направление</label>
+                            <select asp-for="RotationDirection" class="form-control">
+                                <option value="right">Вправо</option>
+                                <option value="left">Влево</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-plus me-1"></i>Добавить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Управление PTZ</h5>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-secondary ptz-btn" data-command="up"><i class="fas fa-arrow-up"></i></button>
+                    <button class="btn btn-secondary ptz-btn" data-command="down"><i class="fas fa-arrow-down"></i></button>
+                    <button class="btn btn-secondary ptz-btn" data-command="left"><i class="fas fa-arrow-left"></i></button>
+                    <button class="btn btn-secondary ptz-btn" data-command="right"><i class="fas fa-arrow-right"></i></button>
+                    <button class="btn btn-secondary ptz-btn" data-command="zoomIn"><i class="fas fa-search-plus"></i></button>
+                    <button class="btn btn-secondary ptz-btn" data-command="zoomOut"><i class="fas fa-search-minus"></i></button>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.RotationLogs.Any() || Model.PtzCommands.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Лог действий</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Действие</th>
+                                <th>Детали</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.RotationLogs)
+                            {
+                                <tr>
+                                    <td>@log.Time.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                                    <td>Поворот</td>
+                                    <td>Каждые @log.IntervalMinutes мин на @log.Angle° (@log.Direction)</td>
+                                </tr>
+                            }
+                            @foreach (var cmd in Model.PtzCommands)
+                            {
+                                <tr>
+                                    <td>@cmd.Time.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                                    <td>PTZ</td>
+                                    <td>@cmd.Command</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function startVideoStream() {
+            const img = document.getElementById('videoStream');
+            if (img) {
+                setInterval(() => {
+                    img.src = '/Camera/GetFrame?' + new Date().getTime();
+                }, 100); // Обновление каждые 100 мс
+            }
+        }
+
+        if ('@Model.IsCameraConnected' === 'True') {
+            startVideoStream();
+        }
+
+        document.querySelectorAll('.ptz-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const command = button.getAttribute('data-command');
+                try {
+                    const response = await fetch('/Camera/PtzControl', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ command })
+                    });
+                    const result = await response.json();
+                    alert(result.message);
+                } catch (error) {
+                    alert('Ошибка PTZ: ' + error.message);
+                }
+            });
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}
