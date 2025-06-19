@@ -1,0 +1,9 @@
+global using WebUI.Models;
+global using Domain.Constants;
+global using System.Diagnostics;
+global using WebUI.Extensions.DI;
+global using Application.Extensions;
+global using Microsoft.AspNetCore.Mvc;
+global using WebUI.Extensions.Middlewares;
+global using Application.Contracts.VehicleDetection;
+global using Infrastructure.Implementations.VehicleDetection;
