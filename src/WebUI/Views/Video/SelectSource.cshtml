@@ -1,0 +1,27 @@
+@model WebUI.Models.SelectSourceViewModel
+@{
+    ViewData["Title"] = "Выбор источника видео";
+}
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <form asp-action="SelectSource" method="post">
+        <div class="form-group">
+            <label asp-for="VideoPath"></label>
+            <input asp-for="VideoPath" class="form-control" placeholder="C:\videos\clip.mp4" />
+            <span asp-validation-for="VideoPath" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CameraIp"></label>
+            <input asp-for="CameraIp" class="form-control" placeholder="192.168.1.100" />
+            <span asp-validation-for="CameraIp" class="text-danger"></span>
+        </div>
+        <div class="form-check mb-3">
+            <input asp-for="UseCamera" class="form-check-input" />
+            <label asp-for="UseCamera" class="form-check-label"></label>
+        </div>
+        <button type="submit" class="btn btn-primary">Далее</button>
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

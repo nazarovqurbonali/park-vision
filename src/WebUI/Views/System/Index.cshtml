@@ -1,0 +1,31 @@
+@{
+ViewData["Title"] = "Система";
+}
+
+<div class="container">
+    <h2 class="mb-4">
+        <i class="fas fa-info-circle me-2"></i>Информация о системе
+    </h2>
+
+    <!-- Кнопка "Назад" -->
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left me-2"></i>Назад
+    </a>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">ParkVision v1.0</h5>
+            <p class="card-text">
+                <strong>Автор:</strong> MR Qurbonali<br />
+                <strong>Год создания:</strong> 2025<br />
+                <strong>Описание:</strong> ParkVision — это система для парковок, использующая 360-градусные камеры для обнаружения транспортных средств и распознавания номеров. Проект разработан с использованием C#, ASP.NET Core MVC, OpenCV и модели YOLO (yolov3-tiny) для обработки видеопотоков. Система подключается к IP-камерам через Ethernet и предоставляет веб-интерфейс для мониторинга и управления.
+            </p>
+            <p class="card-text">
+                <strong>Технологии:</strong><br />
+                - Backend: ASP.NET Core MVC, OpenCV, DNN (YOLO)<br />
+                - Frontend: Bootstrap, Font Awesome, JavaScript<br />
+                - Протокол камеры: RTSP
+            </p>
+        </div>
+    </div>
+</div>

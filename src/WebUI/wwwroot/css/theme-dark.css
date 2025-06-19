@@ -1,0 +1,79 @@
+/* Переменные для тёмной темы */
+:root {
+    --white: #FFFFFF;
+    --dark-blue: #0D1B2A;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* Фон и текст */
+body {
+    background-color: var(--dark-blue);
+    color: var(--white);
+}
+
+/* Хедер */
+header {
+    background-color: var(--dark-blue);
+    border-bottom: 2px solid var(--border-color);
+}
+
+header h4 {
+    color: var(--white);
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
+/* Кнопка переключения темы */
+#themeToggle {
+    background-color: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+}
+
+#themeToggle:hover {
+    background-color: var(--white);
+    color: var(--dark-blue);
+}
+
+/* Сайдбар */
+#sidebar {
+    background-color: var(--dark-blue);
+    border-right: 2px solid var(--border-color);
+}
+
+/* Ссылки в меню */
+.nav-link {
+    color: var(--white);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--hover-bg);
+    color: var(--white);
+}
+
+/* Контент */
+main {
+    background-color: var(--dark-blue);
+}
+
+/* Футер */
+footer {
+    background-color: var(--dark-blue);
+    border-top: 2px solid var(--border-color);
+    color: var(--white);
+}
+
+/* Кнопка меню для мобильных */
+#toggleSidebar {
+    background-color: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+}
+
+#toggleSidebar:hover {
+    background-color: var(--white);
+    color: var(--dark-blue);
+}
